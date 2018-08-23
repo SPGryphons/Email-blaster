@@ -46,3 +46,21 @@ def read_txt(path: str):
     with open(path, 'r') as fp:
         buf = fp.read()
     return buf
+
+
+def read_attachments(paths: list):
+    """
+    Read in any attachment as byte list
+
+    @param path: The paths to the attachment
+    """
+    # storing the attachment byte into a list
+    attachments = {}
+    for path in paths:
+        with open(path, 'rb') as fp:
+            # get the name
+            name = path.rsplit('/',1)[-1]
+            attachments[name] = fp.read()
+    print(attachments)
+    return attachments
+    

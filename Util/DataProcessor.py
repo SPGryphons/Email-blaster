@@ -11,7 +11,7 @@
 ###############################################################################
 
 
-def extract_fields(data, columns):
+def extract_fields(data: list, columns:list):
     """
     To retrieve an new list
 
@@ -23,7 +23,7 @@ def extract_fields(data, columns):
         for index, num in enumerate(columns):
             columns[index] = int(num)
     except ValueError:
-        print('[-] ERROR-----Value in columns are not in')
+        print('[-] ERROR-----Value in columns are not integer')
 
     data_buf = []
 

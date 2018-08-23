@@ -47,16 +47,21 @@ def main():
 
 
     if pargs.sample:
+        # When a sample is asked
         get_sample(send_to, template, column_data)
     elif pargs.nosend:
+        # Break before the sending
         for index, batch in enumerate(data):
             mail = Mail(send_to[index], "SAMPLE", template, column_data[index])
             print(str(mail))
-    
     else:
+        # Send mail
+
+        # mail_list: the list to hold mail obj 
         mail_list = []
         for index, batch in enumerate(data):
-            mail = Mail(send_to[index], "SAMPLE", template, column_data[index])
+            mail = Mail(send_to[index], "SAMPLE", template, column_data[index],
+                        File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
             mail_list.append(mail)
             print(str(mail))
 
@@ -75,8 +80,7 @@ if '__main__' == __name__:
     # No type check yet
     desp = 'THIS IS STILL UNDERDEVELOPMENT DO NOT USE\
             VERSION: 0.0.3\
-            \
-            To run: python3 blast.py -f '
+            To run: python3 blast.py -f <config>'
             
 
     parser = argparse.ArgumentParser(description= desp)

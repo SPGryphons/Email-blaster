@@ -17,7 +17,7 @@ from email.mime.text import MIMEText
 
 class Mail:
     
-    send_to = ''
+    send_to = []
     message = ''
     attachment = None 
 
@@ -26,19 +26,22 @@ class Mail:
     message_template = ''
 
 
-    def __init__(self, send_to: str, subject: str, message_template: str, 
-        message_data: list):
+    def __init__(self, send_to: list, subject: str, message_template: str, 
+        message_data: list, attachment=None):
         """
         Constructor to the Mail object
         @param send_to: who
         @param message_template: The template message that is not formatted
         @param message_data: The data that is to be sub in 
-        @param attachment: The Attachment
+        @param attachment: The Attachment, in a 2D array
+
+        returns mail
         """
 
         self.send_to = send_to
         self.message = message_template.format(message_data)
         self.subject = subject
+        self.attachment = attachment
 
 
     def __str__(self):
@@ -50,13 +53,29 @@ class Mail:
 
     
     def craft(self, username):
+        """
+        Get the Mail object mail ready
+        """
         msg_obj = MIMEMultipart()
         msg_obj['Subject'] = self.subject
         msg_obj['To'] = ', '.join(self.send_to)
         msg_obj['From'] = username
 
         msg_obj.attach(MIMEText(self.message,'html'))
+
+        # Added attachment support
+        if self.attachment is not None:
+            print(self.attachment)
+            for attachment in self.attachment.keys():
+                print(attachment)
+                att_obj = MIMEBase('application', 'octet-stream')
+                att_obj.set_payload(self.attachment[attachment])
+                encoders.encode_base64(att_obj)
+                att_obj.add_header('Content-Disposition', 'attachment', filename=attachment)
+                msg_obj.attach(att_obj)
+                
+        
         return msg_obj.as_string()
 
     def getaddr(self):
-        return self.send_to.join(',') 
+        return ','.join(self.send_to)
