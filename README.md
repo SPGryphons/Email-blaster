@@ -15,7 +15,7 @@ optional arguments:
   -s, --sample          Output sample content. [DOES NOT SEND]
   -n, --nosend          Output sample email. [DOES NOT SEND]
   -f CONFIG, --config CONFIG
-                        Specify config file. [DOES NOT SEND]
+                        Specify config file. 
 ```
 
 ## Setup
