@@ -91,7 +91,7 @@ if '__main__' == __name__:
     parser.add_argument('-n', '--nosend',
         help='Output sample email. [DOES NOT SEND]', action='store_true')
     parser.add_argument('-f', '--config',
-        help='Specify config file. [DOES NOT SEND]')
+        help='Specify config file.')
 
 
     pargs = parser.parse_args()
