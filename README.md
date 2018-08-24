@@ -36,6 +36,24 @@ optional arguments:
     python3 blast.py -f <configuration file>
    ```
 
+## Configuration
+```
+[ACCOUNT]
+username = <Email account>
+
+[MAIL]
+mailserver = <Mail Server URL>
+mailport = <Mail Server Port>
+
+
+[MAILCONTENT]
+mailtemplate = <Path to Template File>
+maildata = <Path to Data File(CSV Format eg: path,path1)>
+emailcolumns = <The column of email address integer (CSV Format)>
+datacolumns = <The column of data column integer (CSV Format)>
+attachment = <Path Attachments(CSV Format eg: path,path1)>
+```
+
 ## Disclaimer
 Do not use for illegal purposes
 
