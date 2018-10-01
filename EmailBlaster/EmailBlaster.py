@@ -46,7 +46,7 @@ class EmailBlaster:
             smtp.ehlo()
             smtp.set_debuglevel(1)
             print('LOGGING INTO EMAIL')
-            smtp.login(self.username, getpass.unix_getpass())
+            smtp.login(self.username, getpass.getpass())
             print('LOG IN SUCCESSFUL')
             # Prevent sending in development
             for email in mail_list:

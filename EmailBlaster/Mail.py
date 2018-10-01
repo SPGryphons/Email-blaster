@@ -39,7 +39,7 @@ class Mail:
         """
 
         self.send_to = send_to
-        self.message = message_template.format(message_data)
+        self.message = message_template.format(data = message_data)
         self.subject = subject
         self.attachment = attachment
 
