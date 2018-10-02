@@ -38,8 +38,8 @@ class Mail:
 
         returns mail
         """
-        reg_data = compile(r'{(\d+)}') # Capture number inside curly braces
-        message_template = reg_data.sub(r'{data[\1]}', message_template) # replace curly braces placeholders
+        reg_data = compile(r'{(\d+)}') # Capture number inside curly brace placeholders
+        message_template = reg_data.sub(r'{data[\1]}', message_template) # replace curly brace placeholders
 
         self.send_to = send_to
         self.message = message_template.format(data = message_data)
