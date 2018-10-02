@@ -60,11 +60,17 @@ def main():
 
         # mail_list: the list to hold mail obj 
         mail_list = []
-        for index, batch in enumerate(data):
-            mail = Mail(send_to[index], subject, template, column_data[index],
-                        File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
-            mail_list.append(mail)
-            print(str(mail))
+        if pargs.attachment:
+            for index, batch in enumerate(data):
+                mail = Mail(send_to[index], subject, template, column_data[index],
+                            File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
+                mail_list.append(mail)
+                print(str(mail))
+        else:
+            for index, batch in enumerate(data):
+                mail = Mail(send_to[index], subject, template, column_data[index])
+                mail_list.append(mail)
+                print(str(mail))
 
         print(config['ACCOUNT']['username'])
         print(config['MAIL']['mailserver'])
@@ -91,6 +97,8 @@ if '__main__' == __name__:
         help='Output sample content. [DOES NOT SEND]', action='store_true')
     parser.add_argument('-n', '--nosend',
         help='Output sample email. [DOES NOT SEND]', action='store_true')
+    parser.add_argument('-a', '--attachment',
+        help='Email has attachment', action='store_true')
     parser.add_argument('-f', '--config',
         help='Specify config file.')
 
