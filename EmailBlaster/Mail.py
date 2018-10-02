@@ -81,4 +81,4 @@ class Mail:
         return msg_obj.as_string()
 
     def getaddr(self):
-        return ','.join(self.send_to)
+        return self.send_to

@@ -50,7 +50,7 @@ class EmailBlaster:
             print('LOG IN SUCCESSFUL')
             # Prevent sending in development
             for email in mail_list:
-                smtp.sendmail(self.username, email.getaddr(), 
+                smtp.sendmail(self.username, email.getaddr(),
                               email.craft(self.username))
                 #email.craft(self.username)
             print('sleeping')
