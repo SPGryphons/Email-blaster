@@ -17,7 +17,7 @@ from Util import DataProcessor as dp
 import argparse
 import configparser
 
-def get_sample(send_to, template, column_data):
+def get_sample(send_to, subject, template, column_data):
     """
     Get the mail object to be returned as a __str__
     Retrieve the first
@@ -28,7 +28,7 @@ def get_sample(send_to, template, column_data):
 
     return void
     """
-    mail = Mail(send_to[0], "SAMPLE", template, column_data[0])
+    mail = Mail(send_to[0], subject, template, column_data[0])
     print(str(mail))
 
 
@@ -41,6 +41,7 @@ def main():
 
     data = File.read_csv_to_list(config['MAILCONTENT']['maildata'])
     template = File.read_txt(config['MAILCONTENT']['mailtemplate'])
+    subject = config['MAILCONTENT']['mailsubject']
 
     send_to = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['emailcolumns']).split(',')]) 
     column_data = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['datacolumns']).split(',')])
@@ -48,11 +49,11 @@ def main():
 
     if pargs.sample:
         # When a sample is asked
-        get_sample(send_to, template, column_data)
+        get_sample(send_to, subject, template, column_data)
     elif pargs.nosend:
         # Break before the sending
         for index, batch in enumerate(data):
-            mail = Mail(send_to[index], "SAMPLE", template, column_data[index])
+            mail = Mail(send_to[index], subject, template, column_data[index])
             print(str(mail))
     else:
         # Send mail
@@ -60,7 +61,7 @@ def main():
         # mail_list: the list to hold mail obj 
         mail_list = []
         for index, batch in enumerate(data):
-            mail = Mail(send_to[index], "SAMPLE", template, column_data[index],
+            mail = Mail(send_to[index], subject, template, column_data[index],
                         File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
             mail_list.append(mail)
             print(str(mail))
