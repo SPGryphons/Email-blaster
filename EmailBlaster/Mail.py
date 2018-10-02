@@ -14,6 +14,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from re import compile
 
 class Mail:
     
@@ -37,6 +38,8 @@ class Mail:
 
         returns mail
         """
+        reg_data = compile(r'{(\d+)}') # Capture number inside curly braces
+        message_template = reg_data.sub(r'{data[\1]}', message_template) # replace curly braces placeholders
 
         self.send_to = send_to
         self.message = message_template.format(data = message_data)
