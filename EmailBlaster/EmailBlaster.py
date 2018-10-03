@@ -21,7 +21,7 @@ class EmailBlaster:
     mailserver = ''
     mailport = int()
 
-    def __init__(self,username, mailserver, mailport ):
+    def __init__(self, username, sendername, mailserver, mailport):
         """
         Constructor
         
@@ -30,6 +30,7 @@ class EmailBlaster:
         @param mailport: the port 
         """
         self.username = username
+        self.sendername = sendername
         self.mailserver = mailserver
         self.mailport = mailport
 
@@ -51,7 +52,7 @@ class EmailBlaster:
             # Prevent sending in development
             for email in mail_list:
                 smtp.sendmail(self.username, email.getaddr(),
-                              email.craft(self.username))
+                              email.craft(self.username, self.sendername))
                 #email.craft(self.username)
             print('sleeping')
             time.sleep(5)

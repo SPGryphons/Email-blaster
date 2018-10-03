@@ -19,6 +19,7 @@ from re import compile
 class Mail:
     
     send_to = []
+    cc_to = []
     message = ''
     attachment = None 
 
@@ -27,7 +28,7 @@ class Mail:
     message_template = ''
 
 
-    def __init__(self, send_to: list, subject: str, message_template: str, 
+    def __init__(self, send_to: list, subject: str, message_template: str,
         message_data: list, attachment=None):
         """
         Constructor to the Mail object
@@ -51,20 +52,21 @@ class Mail:
         """
         A magic function to get string 
         """
-        buffer = 'To: {}\nSubject: {}\n{}\n{}'.format(','.join(self.send_to), ''.join(self.subject), ''.join(self.message), '=' * 50)
+        buffer = 'To: {}\nCC: {}\nSubject: {}\n{}\n{}'.format(', '.join(self.send_to + self.cc_to), ', '.join(self.cc_to), ''.join(self.subject), ''.join(self.message), '=' * 50)
         return buffer
 
     
-    def craft(self, username):
+    def craft(self, username, sendername):
         """
         Get the Mail object mail ready
         """
         msg_obj = MIMEMultipart()
         msg_obj['Subject'] = self.subject
         msg_obj['To'] = ', '.join(self.send_to)
-        msg_obj['From'] = username
+        msg_obj['CC'] = ', '.join(self.cc_to)
+        msg_obj['From'] = '\"{}\" <{}>'.format(sendername, username)
 
-        msg_obj.attach(MIMEText(self.message,'html'))
+        msg_obj.attach(MIMEText(self.message, 'html'))
 
         # Added attachment support
         if self.attachment is not None:
@@ -77,8 +79,12 @@ class Mail:
                 att_obj.add_header('Content-Disposition', 'attachment', filename=attachment)
                 msg_obj.attach(att_obj)
                 
-        
         return msg_obj.as_string()
+
+
+    def set_cc(self, cc_to):
+        self.cc_to = cc_to
+
 
     def getaddr(self):
         return self.send_to

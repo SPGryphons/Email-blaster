@@ -45,7 +45,8 @@ def main():
 
     send_to = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['emailcolumns']).split(',')]) 
     column_data = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['datacolumns']).split(',')])
-
+    if pargs.carboncopy:
+        cc_to = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['cc_columns']).split(',')])
 
     if pargs.sample:
         # When a sample is asked
@@ -63,20 +64,26 @@ def main():
         if pargs.attachment:
             for index, batch in enumerate(data):
                 mail = Mail(send_to[index], subject, template, column_data[index],
-                            File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
+                            attachment=File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
+                if pargs.carboncopy:
+                    mail.set_cc(cc_to[index])
                 mail_list.append(mail)
                 print(str(mail))
         else:
             for index, batch in enumerate(data):
                 mail = Mail(send_to[index], subject, template, column_data[index])
+                if pargs.carboncopy:
+                    mail.set_cc(cc_to[index])
                 mail_list.append(mail)
                 print(str(mail))
 
-        print(config['ACCOUNT']['username'])
-        print(config['MAIL']['mailserver'])
-        print(int(config['MAIL']['mailport']))
+        print('Sender Email:', config['ACCOUNT']['username'])
+        print('Sender Name:', config['ACCOUNT']['sendername'])
+        print('Mail Server:', config['MAIL']['mailserver'])
+        print('Port Number:', int(config['MAIL']['mailport']))
     
         mail_blaster = EmailBlaster(config['ACCOUNT']['username'],
+                                    config['ACCOUNT']['sendername'],
                                     config['MAIL']['mailserver'],
                                     int(config['MAIL']['mailport'])
                                     )
@@ -98,7 +105,9 @@ if '__main__' == __name__:
     parser.add_argument('-n', '--nosend',
         help='Output sample email. [DOES NOT SEND]', action='store_true')
     parser.add_argument('-a', '--attachment',
-        help='Email has attachment', action='store_true')
+        help='Email has attachment.', action='store_true')
+    parser.add_argument('-c', '--carboncopy',
+        help='Email to be sent with carbon copy.', action='store_true')
     parser.add_argument('-f', '--config',
         help='Specify config file.')
 
