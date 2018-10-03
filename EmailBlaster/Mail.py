@@ -52,7 +52,14 @@ class Mail:
         """
         A magic function to get string 
         """
-        buffer = 'To: {}\nCC: {}\nSubject: {}\n{}\n{}'.format(', '.join(self.send_to + self.cc_to), ', '.join(self.cc_to), ''.join(self.subject), ''.join(self.message), '=' * 50)
+        buffer = 'To: {}\nCC: {}\nSubject: {}\n{}\n{}' \
+            .format(', '.join(self.send_to + self.cc_to),
+                ', '.join(self.cc_to),
+                ''.join(self.subject),
+                ''.join(self.message),
+                '=' * 50
+            )
+            
         return buffer
 
     

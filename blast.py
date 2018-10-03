@@ -55,6 +55,8 @@ def main():
         # Break before the sending
         for index, batch in enumerate(data):
             mail = Mail(send_to[index], subject, template, column_data[index])
+            if pargs.carboncopy:
+                mail.set_cc(cc_to[index])
             print(str(mail))
     else:
         # Send mail
