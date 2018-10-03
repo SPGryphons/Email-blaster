@@ -70,8 +70,9 @@ class Mail:
         msg_obj = MIMEMultipart()
         msg_obj['Subject'] = self.subject
         msg_obj['To'] = ', '.join(self.send_to)
-        msg_obj['CC'] = ', '.join(self.cc_to)
         msg_obj['From'] = '\"{}\" <{}>'.format(sendername, username)
+        if self.cc_to:
+            msg_obj['CC'] = ', '.join(self.cc_to)
 
         msg_obj.attach(MIMEText(self.message, 'html'))
 
