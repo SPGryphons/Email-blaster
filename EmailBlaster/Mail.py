@@ -94,4 +94,4 @@ class Mail:
 
 
     def getaddr(self):
-        return self.send_to
+        return self.send_to + self.cc_to
