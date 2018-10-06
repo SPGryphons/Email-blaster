@@ -85,7 +85,8 @@ def main():
         print('Port Number:', int(config['MAIL']['mailport']))
     
         mail_blaster = EmailBlaster(config['ACCOUNT']['username'],
-                                    config['ACCOUNT']['sendername'],
+                                    config['ACCOUNT']['mailsender_address'],
+                                    config['ACCOUNT']['mailsender_name'],
                                     config['MAIL']['mailserver'],
                                     int(config['MAIL']['mailport'])
                                     )

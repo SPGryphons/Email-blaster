@@ -18,10 +18,12 @@ import time
 class EmailBlaster:
 
     username = ''
+    mailsender_address = ''
+    mailsender_name = ''
     mailserver = ''
     mailport = int()
 
-    def __init__(self, username, sendername, mailserver, mailport):
+    def __init__(self, username, mailsender_address, mailsender_name, mailserver, mailport):
         """
         Constructor
         
@@ -30,7 +32,8 @@ class EmailBlaster:
         @param mailport: the port 
         """
         self.username = username
-        self.sendername = sendername
+        self.mailsender_address = mailsender_address
+        self.mailsender_name = mailsender_name
         self.mailserver = mailserver
         self.mailport = mailport
 
@@ -51,8 +54,8 @@ class EmailBlaster:
             print('LOG IN SUCCESSFUL')
             # Prevent sending in development
             for email in mail_list:
-                smtp.sendmail(self.username, email.getaddr(),
-                              email.craft(self.username, self.sendername))
+                smtp.sendmail(self.mailsender_address, email.getaddr(),
+                              email.craft(self.username, self.mailsender_name))
                 #email.craft(self.username)
             print('sleeping')
             time.sleep(5)
