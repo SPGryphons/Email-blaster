@@ -79,14 +79,14 @@ def main():
                 mail_list.append(mail)
                 print(str(mail))
 
-        print('Sender Email:', config['ACCOUNT']['username'])
-        print('Sender Name:', config['ACCOUNT']['sendername'])
+        print('Sender Email:', config['MAILCONTENT']['mailsender_address'])
+        print('Sender Name:', config['MAILCONTENT']['mailsender_name'])
         print('Mail Server:', config['MAIL']['mailserver'])
         print('Port Number:', int(config['MAIL']['mailport']))
     
         mail_blaster = EmailBlaster(config['ACCOUNT']['username'],
-                                    config['ACCOUNT']['mailsender_address'],
-                                    config['ACCOUNT']['mailsender_name'],
+                                    config['MAILCONTENT']['mailsender_address'],
+                                    config['MAILCONTENT']['mailsender_name'],
                                     config['MAIL']['mailserver'],
                                     int(config['MAIL']['mailport'])
                                     )
