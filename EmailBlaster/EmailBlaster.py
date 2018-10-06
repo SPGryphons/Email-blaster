@@ -55,7 +55,7 @@ class EmailBlaster:
             # Prevent sending in development
             for email in mail_list:
                 smtp.sendmail(self.mailsender_address, email.getaddr(),
-                              email.craft(self.username, self.mailsender_name))
+                              email.craft(self.mailsender_address, self.mailsender_name))
                 #email.craft(self.username)
             print('sleeping')
             time.sleep(5)
