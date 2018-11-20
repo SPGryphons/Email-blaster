@@ -17,7 +17,7 @@ from Util import DataProcessor as dp
 import argparse
 import configparser
 
-def get_sample(send_to, template, column_data):
+def get_sample(send_to, subject, template, column_data):
     """
     Get the mail object to be returned as a __str__
     Retrieve the first
@@ -28,7 +28,7 @@ def get_sample(send_to, template, column_data):
 
     return void
     """
-    mail = Mail(send_to[0], "SAMPLE", template, column_data[0])
+    mail = Mail(send_to[0], subject, template, column_data[0])
     print(str(mail))
 
 
@@ -41,35 +41,52 @@ def main():
 
     data = File.read_csv_to_list(config['MAILCONTENT']['maildata'])
     template = File.read_txt(config['MAILCONTENT']['mailtemplate'])
+    subject = config['MAILCONTENT']['mailsubject']
 
     send_to = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['emailcolumns']).split(',')]) 
     column_data = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['datacolumns']).split(',')])
-
+    if pargs.carboncopy:
+        cc_to = dp.extract_fields(data, [int(i) for i in str(config['MAILCONTENT']['cc_columns']).split(',')])
 
     if pargs.sample:
         # When a sample is asked
-        get_sample(send_to, template, column_data)
+        get_sample(send_to, subject, template, column_data)
     elif pargs.nosend:
         # Break before the sending
         for index, batch in enumerate(data):
-            mail = Mail(send_to[index], "SAMPLE", template, column_data[index])
+            mail = Mail(send_to[index], subject, template, column_data[index])
+            if pargs.carboncopy:
+                mail.set_cc(cc_to[index])
             print(str(mail))
     else:
         # Send mail
 
         # mail_list: the list to hold mail obj 
         mail_list = []
-        for index, batch in enumerate(data):
-            mail = Mail(send_to[index], "SAMPLE", template, column_data[index],
-                        File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
-            mail_list.append(mail)
-            print(str(mail))
+        if pargs.attachment:
+            for index, batch in enumerate(data):
+                mail = Mail(send_to[index], subject, template, column_data[index],
+                            attachment=File.read_attachments(config['MAILCONTENT']['attachment'].split(',')))
+                if pargs.carboncopy:
+                    mail.set_cc(cc_to[index])
+                mail_list.append(mail)
+                print(str(mail))
+        else:
+            for index, batch in enumerate(data):
+                mail = Mail(send_to[index], subject, template, column_data[index])
+                if pargs.carboncopy:
+                    mail.set_cc(cc_to[index])
+                mail_list.append(mail)
+                print(str(mail))
 
-        print(config['ACCOUNT']['username'])
-        print(config['MAIL']['mailserver'])
-        print(int(config['MAIL']['mailport']))
+        print('Sender Email:', config['MAILCONTENT']['mailsender_address'])
+        print('Sender Name:', config['MAILCONTENT']['mailsender_name'])
+        print('Mail Server:', config['MAIL']['mailserver'])
+        print('Port Number:', int(config['MAIL']['mailport']))
     
         mail_blaster = EmailBlaster(config['ACCOUNT']['username'],
+                                    config['MAILCONTENT']['mailsender_address'],
+                                    config['MAILCONTENT']['mailsender_name'],
                                     config['MAIL']['mailserver'],
                                     int(config['MAIL']['mailport'])
                                     )
@@ -90,6 +107,10 @@ if '__main__' == __name__:
         help='Output sample content. [DOES NOT SEND]', action='store_true')
     parser.add_argument('-n', '--nosend',
         help='Output sample email. [DOES NOT SEND]', action='store_true')
+    parser.add_argument('-a', '--attachment',
+        help='Email has attachment.', action='store_true')
+    parser.add_argument('-c', '--carboncopy',
+        help='Email to be sent with carbon copy.', action='store_true')
     parser.add_argument('-f', '--config',
         help='Specify config file.')
 
